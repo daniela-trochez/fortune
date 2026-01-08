@@ -1,0 +1,7 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #050505; /* noche */
+  color: white;
+  font-family: system-ui, sans-serif;
+}

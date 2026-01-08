@@ -1,0 +1,44 @@
+.lock-input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  color: #fff !important;
+  font-size: 1.5rem;
+  text-align: center;
+  width: 6rem;
+  outline: none;
+  caret-color: white;
+}
+
+.lock-input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.lock-feedback {
+
+
+  transition: all 0.6s ease;
+  text-align: center;
+}
+.lock-hint {
+  font-size: 0.95rem;
+  opacity: 0.6;
+  text-align: center;
+  max-width: 18rem;
+}
+
+.lock-button {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.3);
+  color: white;
+  padding: 0.4rem 1.2rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.lock-button:active {
+  opacity: 0.6;
+}
+
