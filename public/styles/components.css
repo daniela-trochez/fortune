@@ -1,3 +1,4 @@
+/* LOCKSCREEN */
 .lock-input {
   background: transparent;
   border: none;
@@ -15,11 +16,10 @@
 }
 
 .lock-feedback {
-
-
   transition: all 0.6s ease;
   text-align: center;
 }
+
 .lock-hint {
   font-size: 0.95rem;
   opacity: 0.6;
@@ -42,3 +42,72 @@
   opacity: 0.6;
 }
 
+/* GALLETAS */
+.cookie {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: url('../assets/images/cookie.png') no-repeat center/cover;
+  position: absolute;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  touch-action: manipulation; /* mobile-friendly */
+}
+
+.cookies-container {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  overflow-y: auto; /* scroll vertical si hay muchas galletas */
+}
+
+.cookie-active {
+  transform: scale(1.5);
+  z-index: 500;
+}
+
+.cookie-opened {
+  opacity: 0.4; /* galleta apagada pero interactuable */
+}
+
+/* OVERLAY */
+.cookie-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  background: rgba(0,0,0,0.8);
+}
+
+.cookie-overlay.title-only {
+  background: rgba(0,0,0,0.5); /* overlay con título */
+}
+
+.cookie-box {
+  background: #2b2525;
+  padding: 1.5rem;
+  border-radius: 12px;
+  max-width: 90%;
+  text-align: center;
+}
+
+.cookie-box video {
+  max-width: 100%;
+  border-radius: 8px;
+  margin-top: 0.5rem;
+}
+
+.close-cookie {
+  margin-top: 1rem;
+  padding: 0.4rem 1rem;
+  border: none;
+  background: #f8e5c3;
+  border-radius: 999px;
+  cursor: pointer;
+}
