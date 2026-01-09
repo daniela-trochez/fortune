@@ -6,62 +6,128 @@ export function renderLockScreen(container) {
   wrapper.className = "lock-screen";
 
   wrapper.innerHTML = `
-  <div class="lock-content">
-    <p class="lock-hint">
-      ¿Cuántos besos en Año Nuevo?
-    </p>
+    <video
+      class="bg-video"
+      src="/public/assets/video/del_rio.mp4"
+      autoplay
+      muted
+      loop
+      playsinline
+    ></video>
 
-    <input
-      type="password"
-      inputmode="numeric"
-      pattern="[0-9]*"
-      class="lock-input"
-      aria-label="código"
-      autocomplete="off"
-    />
-
-    <button class="lock-button">
-      Entrar
+    <button class="sound-toggle" aria-label="Activar sonido">
+      🔇
     </button>
 
+    <div class="lock-content">
+      <p class="lock-hint">¿Cuántos besos en Año Nuevo?</p>
+
+      <!-- CONTENEDOR DEL INPUT + OJO -->
+    <div class="password-field">
+      <input
+        type="password"
+        inputmode="text"
+        class="lock-input"
+        aria-label="código"
+        autocomplete="off"
+      />
+
+      <button
+        type="button"
+        class="password-toggle"
+        aria-label="Mostrar contraseña"
+      >
+        👁
+      </button>
+    </div>
+
+    <button class="lock-button">Entrar</button>
     <p class="lock-feedback"></p>
   </div>
 `;
 
+  const video = wrapper.querySelector(".bg-video");
+  const soundBtn = wrapper.querySelector(".sound-toggle");
   const input = wrapper.querySelector(".lock-input");
   const feedback = wrapper.querySelector(".lock-feedback");
   const button = wrapper.querySelector(".lock-button");
 
-  input.focus();
+  const passwordField = wrapper.querySelector(".password-field");
+  const toggle = wrapper.querySelector(".password-toggle");
 
-  input.addEventListener("input", () => {
-    if (!input.value) {
-      feedback.textContent = "";
-    }
+/* ---- TOGGLE PASSWORD VISIBILITY ---- */
+toggle.addEventListener("click", () => {
+  const isHidden = input.type === "password";
+
+  input.type = isHidden ? "text" : "password";
+
+  // accesibilidad + estado visual
+  toggle.setAttribute(
+    "aria-label",
+    isHidden ? "Ocultar contraseña" : "Mostrar contraseña"
+  );
+});
+
+  /* ---- AUDIO CONTROL ---- */
+  soundBtn.addEventListener("click", () => {
+    video.pause();
+    video.currentTime = 0;
+    video.muted = false;
+
+    video.play().catch(() => {
+      console.warn("No se pudo reproducir con audio");
+    });
+
+    soundBtn.classList.add("hidden");
   });
 
-  button.addEventListener("click", () => {
-    if (!input.value) return;
+ /* ---- PASSWORD FLOW ---- */
+input.focus();
 
-    if (input.value === CONFIG.PASSWORD) {
-      input.disabled = true;
-      button.disabled = true;
+input.addEventListener("input", () => {
+  feedback.textContent = "";
 
-      wrapper.classList.add("unlocking");
-      feedback.textContent = CONFIG.SUCCESS_TEXT;
+  const passwordField = input.closest(".password-field");
+  const hasValue = input.value.length > 0;
 
-      setTimeout(() => {
-        setState(STATES.UNIVERSE);
-      }, CONFIG.TRANSITION_DELAY);
-    } else if (feedback.textContent !== CONFIG.FAIL_TEXT) {
-      feedback.textContent = CONFIG.FAIL_TEXT;
-    }
-  });
-  input.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-      button.click();
-    }
-  });
+  if (passwordField) {
+    passwordField.classList.toggle("has-value", hasValue);
+  }
 
-  container.appendChild(wrapper);
+  // 🔐 Si se borra el texto, forzar modo password
+  if (!hasValue && input.type === "text") {
+    input.type = "password";
+  }
+});
+
+
+button.addEventListener("click", () => {
+  if (!input.value) return;
+
+  const normalizedInput = input.value
+    .trim()
+    .toLowerCase();
+
+  const isValid = CONFIG.PASSWORDS.includes(normalizedInput);
+
+  if (isValid) {
+    input.disabled = true;
+    button.disabled = true;
+
+    wrapper.classList.add("unlocking");
+    feedback.textContent = CONFIG.SUCCESS_TEXT;
+
+    setTimeout(() => {
+      setState(STATES.UNIVERSE);
+    }, CONFIG.TRANSITION_DELAY);
+  } else {
+    feedback.textContent = CONFIG.FAIL_TEXT;
+  }
+});
+
+input.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") button.click();
+});
+
+container.appendChild(wrapper);
 }

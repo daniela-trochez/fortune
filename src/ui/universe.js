@@ -1,3 +1,4 @@
+// renderUniverse.js
 import { createFloatingCookie } from './cookie.js';
 
 export function renderUniverse(container) {

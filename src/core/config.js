@@ -1,8 +1,8 @@
 // src/core/config.js
 
 export const CONFIG = {
-  PASSWORD: '300',
-  FAIL_TEXT: 'ese no es',
+  PASSWORDS: ['300','trescientos'],
+  FAIL_TEXT: '... ♥ acordate, bonita.',
   SUCCESS_TEXT: 'gracias por recordar...',
 
   TRANSITION_DELAY: 3000, // ms

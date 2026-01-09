@@ -1,13 +1,12 @@
+/* layout.css */
 .lock-screen {
+  position: fixed;
+  inset: 0;
   min-height: 100vh;
   display: flex;
-  align-items: center;
+  align-items: flex-end; /* 👈 clave */
   justify-content: center;
+  padding-bottom: 20vh;       /* 👈 ajusta aquí */
+ 
 }
 
-.lock-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-}
