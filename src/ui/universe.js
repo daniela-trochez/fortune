@@ -14,86 +14,108 @@ export function renderUniverse(container) {
 
   const cookiesContainer = wrapper.querySelector('.cookies-container');
 
-  // Hacer scroll vertical si hay muchas galletas
-  cookiesContainer.style.position = 'relative';
-  cookiesContainer.style.width = '100%';
-  cookiesContainer.style.minHeight = '100vh';
-  cookiesContainer.style.overflowY = 'auto';
-
-  // Datos de ejemplo
   const cookiesData = [
-    { content: "Esto me dio risa 😄", type: 'text', hint: 'Un momento divertido' },
+    { content: "Esto me dio risa", type: 'text', hint: 'Un momento divertido' },
     { content: "video1.mp4", type: 'video', hint: 'Una reflexión corta' },
     { content: "Poema de amor", type: 'text', hint: 'Inspiración poética' },
     { content: "Otro mensaje sorpresa", type: 'text', hint: 'Especial para ti' },
-    { content: "Más risas 😆", type: 'text', hint: 'Un momento alegre' },
+    { content: "Más risas", type: 'text', hint: 'Un momento alegre' },
     { content: "Reflexión profunda", type: 'text', hint: 'Algo para pensar' }
   ];
 
- 
-
-  const cookieSize = 90; // px
-  const margin = 15;     // mínimo entre galletas
-  const placedCookies = [];
-
-  // Área inicial centrada
-  const centerX = window.innerWidth / 2;
-  const centerY = window.innerHeight / 2;
-
-  cookiesData.forEach((data, index) => {
-    setTimeout(() => {
-      const cookie = createFloatingCookie(cookiesContainer, data.content, data.type, data.hint);
-
-      // Intentamos posicionar cerca del centro, evitando choque
-      let posX, posY;
-      let tries = 0;
-      const maxOffsetX = window.innerWidth / 3;  // ±1/3 ancho
-      const maxOffsetY = window.innerHeight / 3; // ±1/3 alto
-
-      do {
-        posX = centerX + (Math.random() * 2 - 1) * maxOffsetX;
-        posY = centerY + (Math.random() * 2 - 1) * maxOffsetY;
-
-        // Limitar dentro de la pantalla
-        posX = Math.max(margin, Math.min(window.innerWidth - cookieSize - margin, posX));
-        posY = Math.max(margin, Math.min(window.innerHeight - cookieSize - margin, posY));
-
-        tries++;
-      } while (isOverlapping(posX, posY, cookieSize, placedCookies) && tries < 100);
-
-      cookie.style.left = posX + 'px';
-      cookie.style.top = posY + 'px';
-
-      placedCookies.push({ x: posX, y: posY, size: cookieSize });
-
-      // Animación flotante suave
-      const floatDistance = 10 + Math.random() * 10;
-      const floatDuration = 3000 + Math.random() * 2000;
-      cookie.animate([
-        { transform: 'translateY(0px)' },
-        { transform: `translateY(-${floatDistance}px)` },
-        { transform: 'translateY(0px)' }
-      ], {
-        duration: floatDuration,
-        iterations: Infinity
+  // 📱 Función para posicionar galletas desde el CENTRO sin colisiones
+  function positionCookies() {
+    const { width, height } = cookiesContainer.getBoundingClientRect();
+    
+    // Tamaño adaptativo según pantalla
+    let cookieSize = 90;
+    if (width < 480) cookieSize = 55;       // móvil pequeño
+    else if (width < 768) cookieSize = 65;  // móvil/tablet
+    
+    const padding = 15;
+    const minDistance = cookieSize + 15; // distancia mínima entre galletas
+    
+    // Centro de la pantalla
+    const centerX = width / 2;
+    const centerY = height / 2;
+    
+    const positions = []; // guardar posiciones ya usadas
+    
+    // Función para verificar si una posición colisiona
+    function hasCollision(newX, newY) {
+      return positions.some(pos => {
+        const dx = newX - pos.x;
+        const dy = newY - pos.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        return distance < minDistance;
       });
-
-      cookie.classList.add('cookie-pulse');
-
-    }, index * 400);
-  });
-}
-
-// Función para comprobar si la nueva galleta chocaría con otras
-function isOverlapping(x, y, size, placed) {
-  for (let i = 0; i < placed.length; i++) {
-    const c = placed[i];
-    const dx = c.x - x;
-    const dy = c.y - y;
-    const distance = Math.sqrt(dx * dx + dy * dy);
-    if (distance < size + 10) { // 10px margen extra
-      return true;
     }
+    
+    cookiesData.forEach((data, index) => {
+      const cookie = createFloatingCookie(
+        cookiesContainer,
+        data.content,
+        data.type,
+        data.hint
+      );
+
+      let x, y;
+      let attempts = 0;
+      const maxAttempts = 50;
+      
+      // Intentar encontrar posición sin colisión
+      do {
+        const randomX = (Math.random() - 0.5) * width * 0.6;
+        const randomY = (Math.random() - 0.5) * height * 0.6;
+        
+        const baseX = centerX + randomX - cookieSize / 2;
+        const baseY = centerY + randomY - cookieSize / 2;
+        
+        x = Math.max(padding, Math.min(width - cookieSize - padding, baseX));
+        y = Math.max(padding, Math.min(height - cookieSize - padding, baseY));
+        
+        attempts++;
+      } while (hasCollision(x, y) && attempts < maxAttempts);
+      
+      // Guardar posición
+      positions.push({ x, y });
+
+      cookie.style.left = `${x}px`;
+      cookie.style.top = `${y}px`;
+      cookie.style.width = `${cookieSize}px`;
+      cookie.style.height = `${cookieSize}px`;
+
+      // Flotación sutil
+      const floatDistance = cookieSize * 0.15;
+      cookie.animate(
+        [
+          { transform: 'translateY(0)' },
+          { transform: `translateY(-${floatDistance}px)` },
+          { transform: 'translateY(0)' }
+        ],
+        {
+          duration: 3000 + Math.random() * 2000,
+          iterations: Infinity,
+          easing: 'ease-in-out',
+          delay: Math.random() * 1000
+        }
+      );
+    });
   }
-  return false;
+
+  // Esperar al layout y posicionar
+  requestAnimationFrame(() => {
+    positionCookies();
+  });
+
+  // 🔄 Re-posicionar en resize (con debounce)
+  let resizeTimeout;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      // Limpiar galletas anteriores
+      cookiesContainer.innerHTML = '';
+      positionCookies();
+    }, 250);
+  });
 }

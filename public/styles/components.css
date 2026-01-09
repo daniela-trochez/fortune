@@ -114,23 +114,6 @@
 }
 
 
-/* 
-.sound-toggle {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-
-  z-index: 5;
-  background: rgba(0,0,0,0.5);
-  border: none;
-  color: white;
-  font-size: 1.5rem;
-  padding: 0.6rem;
-  border-radius: 50%;
-  cursor: pointer;
-  animation: pulse 2s infinite;
-} */
 
 .sound-toggle.hidden {
   display: none;
@@ -148,16 +131,18 @@
   cursor: pointer;
   pointer-events: auto;
   transition: transform 0.3s ease, opacity 0.3s ease;
-  touch-action: manipulation; /* mobile-friendly */
+  touch-action: manipulation;
+  
 }
 
 .cookies-container {
-  position: relative;
+  position: absolute;
+  inset: 0;
   width: 100%;
-  min-height: 100vh;
-  overflow-y: auto; /* scroll vertical si hay muchas galletas */
+  height: 100%;
+  overflow: hidden;
+  
 }
-
 .cookie-active {
   transform: scale(1.5);
   z-index: 500;
@@ -168,7 +153,7 @@
 }
 
 /* OVERLAY */
-.cookie-overlay {
+.cookie-overlay  {
   position: fixed;
   top: 0;
   left: 0;
@@ -179,6 +164,7 @@
   align-items: center;
   z-index: 1000;
   background: rgba(0,0,0,0.8);
+  padding: 1rem;
 }
 
 .cookie-overlay.title-only {
@@ -206,4 +192,62 @@
   background: #f8e5c3;
   border-radius: 999px;
   cursor: pointer;
+}
+
+/* RESPONSIVE BREAKPOINTS */
+@media (max-width: 768px) {
+  .cookie-box {
+    padding: 1.2rem;
+    max-width: 95%;
+  }
+  
+  .cookie-hint {
+    font-size: 1rem;
+  }
+  
+  .cookie-content {
+    font-size: 0.95rem;
+  }
+  
+  .lock-hint {
+    font-size: 0.85rem;
+    max-width: 90%;
+  }
+}
+
+@media (max-width: 480px) {
+  .cookie-box {
+    padding: 1rem;
+    max-width: 95%;
+  }
+  
+  .cookie-hint {
+    font-size: 0.9rem;
+  }
+  
+  .cookie-box video {
+    max-height: 50vh;
+  }
+  
+  .sound-toggle {
+    width: 60px;
+    height: 60px;
+    font-size: 1.8rem;
+  }
+  
+  .close-cookie {
+    padding: 0.4rem 1.2rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Para pantallas MUY pequeñas */
+@media (max-width: 360px) {
+  .cookie-box {
+    padding: 0.75rem;
+  }
+  
+  .cookie-hint {
+    font-size: 0.85rem;
+  }
 }

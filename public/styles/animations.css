@@ -11,6 +11,10 @@
   opacity: 1;
   animation: fadeIn 1.2s ease forwards;
 }
+.lock-content {
+  z-index: 10;
+  pointer-events: auto;
+}
 
 @keyframes fadeIn {
   from { opacity: 0; }
@@ -19,7 +23,7 @@
 
 /* UNIVERSE / STARS */
 .universe {
-  width: 100vw;
+  width: 100%;
   height: 100vh;
   position: relative;
   overflow: hidden;
