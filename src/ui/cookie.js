@@ -27,19 +27,19 @@ function openCookieOverlay(cookie) {
   }
 }
 
+
 function showOverlayTitleWithTip(title, cookie) {
   const overlay = document.createElement('div');
   overlay.className = 'cookie-overlay title-only';
   overlay.innerHTML = `
     <div class="cookie-box">
-      <p class="cookie-hint"></p>
+      <p class="cookie-hint typing"></p>
       <p class="cookie-tip">Toca para ver</p>
     </div>
   `;
 
   document.body.appendChild(overlay);
 
-  // ⌨️ Efecto máquina de escribir para el hint
   const hintElement = overlay.querySelector('.cookie-hint');
   let charIndex = 0;
 
@@ -49,14 +49,26 @@ function showOverlayTitleWithTip(title, cookie) {
       charIndex++;
       setTimeout(typeHint, 60);
     } else {
-      // 👈 Quitar clase 'typing' cuando termina
       hintElement.classList.remove('typing');
     }
   }
 
   setTimeout(typeHint, 300);
 
-  overlay.addEventListener('click', () => {
+  // 👇 Solo el overlay (fondo), no la caja
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) { // 👈 Solo si hacen click en el fondo oscuro
+      revealCookieContentInOverlay(
+        overlay,
+        cookie.dataset.type,
+        cookie.dataset.content,
+        cookie
+      );
+    }
+  });
+  
+  // 👇 La caja también puede abrirlo
+  overlay.querySelector('.cookie-box').addEventListener('click', () => {
     revealCookieContentInOverlay(
       overlay,
       cookie.dataset.type,
@@ -68,8 +80,14 @@ function showOverlayTitleWithTip(title, cookie) {
   return overlay;
 }
 
+
 function revealCookieContentInOverlay(overlay, type, content, cookie) {
   overlay.classList.remove('title-only');
+  
+  // 👇 Remover el listener anterior para evitar duplicados
+  overlay.replaceWith(overlay.cloneNode(false));
+  overlay = document.querySelector('.cookie-overlay');
+  
   overlay.innerHTML = `
     <div class="cookie-box">
       ${type === 'text' ? `<p class="cookie-content">${content}</p>` : ''}
@@ -82,6 +100,14 @@ function revealCookieContentInOverlay(overlay, type, content, cookie) {
       <button class="close-cookie">Cerrar</button>
     </div>
   `;
+
+  // 👇 Prevenir que clicks en el video activen el overlay
+  const videoWrapper = overlay.querySelector('.video-wrapper');
+  if (videoWrapper) {
+    videoWrapper.addEventListener('click', (e) => {
+      e.stopPropagation(); // 👈 Evita que el click llegue al overlay
+    });
+  }
 
   overlay.querySelector('.close-cookie').addEventListener('click', () => {
     overlay.remove();
