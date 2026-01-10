@@ -32,12 +32,29 @@ function showOverlayTitleWithTip(title, cookie) {
   overlay.className = 'cookie-overlay title-only';
   overlay.innerHTML = `
     <div class="cookie-box">
-      <p class="cookie-hint">${title}</p>
+      <p class="cookie-hint"></p>
       <p class="cookie-tip">Toca para ver</p>
     </div>
   `;
 
   document.body.appendChild(overlay);
+
+  // ⌨️ Efecto máquina de escribir para el hint
+  const hintElement = overlay.querySelector('.cookie-hint');
+  let charIndex = 0;
+
+  function typeHint() {
+    if (charIndex < title.length) {
+      hintElement.textContent += title.charAt(charIndex);
+      charIndex++;
+      setTimeout(typeHint, 60);
+    } else {
+      // 👈 Quitar clase 'typing' cuando termina
+      hintElement.classList.remove('typing');
+    }
+  }
+
+  setTimeout(typeHint, 300);
 
   overlay.addEventListener('click', () => {
     revealCookieContentInOverlay(
@@ -56,7 +73,12 @@ function revealCookieContentInOverlay(overlay, type, content, cookie) {
   overlay.innerHTML = `
     <div class="cookie-box">
       ${type === 'text' ? `<p class="cookie-content">${content}</p>` : ''}
-      ${type === 'video' ? `<video src="${content}" controls autoplay></video>` : ''}
+      ${type === 'video' ? `
+  <div class="video-wrapper">
+    <video src="${content}" controls autoplay></video>
+    <div class="video-overlay"></div>
+  </div>
+` : ''}
       <button class="close-cookie">Cerrar</button>
     </div>
   `;

@@ -7,20 +7,46 @@ export function renderUniverse(container) {
 
   wrapper.innerHTML = `
     <div class="stars"></div>
+    <div class="typewriter-container">
+      <p class="typewriter-text"></p>
+    </div>
     <div class="cookies-container"></div>
   `;
 
   container.appendChild(wrapper);
 
   const cookiesContainer = wrapper.querySelector('.cookies-container');
+  const typewriterText = wrapper.querySelector('.typewriter-text');
+
+  // ⌨️ Efecto máquina de escribir
+  const message = "Bienvenida a este espacio, ahora quiero que descubras qué trae cada fortuna, espero que te guste";
+  let charIndex = 0;
+
+  function typeWriter() {
+    if (charIndex < message.length) {
+      typewriterText.textContent += message.charAt(charIndex);
+      charIndex++;
+      setTimeout(typeWriter, 80); // velocidad de escritura (50ms por letra)
+    }
+  }
+
+  // Iniciar efecto
+  setTimeout(typeWriter, 500); // espera 500ms antes de empezar
 
   const cookiesData = [
-    { content: "Esto me dio risa", type: 'text', hint: 'Un momento divertido' },
-    { content: "video1.mp4", type: 'video', hint: 'Una reflexión corta' },
-    { content: "Poema de amor", type: 'text', hint: 'Inspiración poética' },
-    { content: "Otro mensaje sorpresa", type: 'text', hint: 'Especial para ti' },
-    { content: "Más risas", type: 'text', hint: 'Un momento alegre' },
-    { content: "Reflexión profunda", type: 'text', hint: 'Algo para pensar' }
+    { content: "/public/assets/video/meme1.mp4", type: 'video', hint: 'Es hora de un meme' },
+    { content: "/public/assets/video/hora-aventura.mp4", type: 'video', hint: 'Hay valor en todo lo verdadero ...' },
+    { content: "/public/assets/video/alma-pedazos.mp4", type: 'video', hint: 'Tengo el alma en pedazos' },
+    { content: "/public/assets/video/gatito-serio.mp4", type: 'video', hint: 'Te presento a un gatito serio' },
+    { content: "/public/assets/video/ganar-perdiendo.mp4", type: 'video', hint: 'Gracias por existir; coincidir tuvo sentido.' },
+    { content: "/public/assets/video/shakira-sol.mp4", type: 'video', hint: '...cosas lindas ... vos y shaki' },
+    { content: "/public/assets/video/irrepetible.mp4", type: 'video', hint: '...Tu forma no se repite.' },
+    { content: "/public/assets/video/recuerda.mp4", type: 'video', hint: 'No corras. Respira' },
+    { content: "/public/assets/video/lohicistebien.mp4", type: 'video', hint: 'Hay días en que recordar basta.' },
+    { content: "/public/assets/video/corazon.mp4", type: 'video', hint: 'Tu corazón fuerte y el mio queriendose salir' },
+    
+
+   
   ];
 
   // 📱 Función para posicionar galletas desde el CENTRO sin colisiones
@@ -33,11 +59,12 @@ export function renderUniverse(container) {
     else if (width < 768) cookieSize = 65;  // móvil/tablet
     
     const padding = 15;
+    const topPadding = 120; // espacio extra arriba para el texto
     const minDistance = cookieSize + 15; // distancia mínima entre galletas
     
-    // Centro de la pantalla
+    // Centro de la pantalla (ajustado hacia abajo por el texto)
     const centerX = width / 2;
-    const centerY = height / 2;
+    const centerY = (height + topPadding) / 2;
     
     const positions = []; // guardar posiciones ya usadas
     
@@ -72,7 +99,7 @@ export function renderUniverse(container) {
         const baseY = centerY + randomY - cookieSize / 2;
         
         x = Math.max(padding, Math.min(width - cookieSize - padding, baseX));
-        y = Math.max(padding, Math.min(height - cookieSize - padding, baseY));
+        y = Math.max(topPadding, Math.min(height - cookieSize - padding, baseY)); // respeta topPadding
         
         attempts++;
       } while (hasCollision(x, y) && attempts < maxAttempts);

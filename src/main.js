@@ -7,8 +7,31 @@ import { renderUniverse } from './ui/universe.js';
 const app = document.getElementById('app');
 
 function render(state) {
-  app.innerHTML = '';
+  // Si hay contenido previo, hacer fade-out primero
+  if (app.children.length > 0) {
+    app.classList.add('fade-out');
+    
+    setTimeout(() => {
+      app.innerHTML = '';
+      renderNewState(state);
+      
+      // Fade-in del nuevo contenido
+      requestAnimationFrame(() => {
+        app.classList.remove('fade-out');
+        app.classList.add('fade-in');
+        
+        setTimeout(() => {
+          app.classList.remove('fade-in');
+        }, 100);
+      });
+    }, 100); // Espera que termine el fade-out
+  } else {
+    // Primera carga, sin transición
+    renderNewState(state);
+  }
+}
 
+function renderNewState(state) {
   switch (state) {
     case STATES.LOCKED:
       renderLockScreen(app);

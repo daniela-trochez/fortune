@@ -103,3 +103,30 @@
   50% { transform: scale(1.1); opacity: 1; }
   100% { transform: scale(1); opacity: 0.7; }
 }
+
+/* Fade-out para TODA la vista lockscreen */
+.lock-screen.unlocking {
+  animation: fadeOutComplete 2.3s ease-out forwards;
+}
+
+@keyframes fadeOutComplete {
+  0% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 1; /* Mantiene visible el mensaje */
+  }
+  100% {
+    opacity: 0; /* 👈 TODO se desvanece */
+  }
+}
+
+/* Universe aparece suavemente */
+.universe {
+  animation: fadeInUniverse 2s ease-in;
+}
+
+@keyframes fadeInUniverse {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

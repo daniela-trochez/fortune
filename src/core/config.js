@@ -5,5 +5,5 @@ export const CONFIG = {
   FAIL_TEXT: '... ♥ acordate, bonita.',
   SUCCESS_TEXT: 'gracias por recordar...',
 
-  TRANSITION_DELAY: 3000, // ms
+  TRANSITION_DELAY: 1500, // ms
 };
