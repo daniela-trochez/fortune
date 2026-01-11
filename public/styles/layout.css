@@ -1,13 +1,18 @@
 /* layout.css */
 /* texto del login primera ventana */
+
 .lock-screen {
   position: fixed;
   inset: 0;
-  min-height: 100vh;
+  min-height: 100svh; /* mejor que 100vh en mobile */
   display: flex;
-  align-items: flex-end; /* 👈 clave */
-  justify-content: center;
-  padding-bottom: 20vh;       /* 👈 ajusta aquí */
- 
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+
+  padding-top: clamp(2rem, 8vh, 6rem);
+  padding-inline: 1rem;
+
+  z-index: 1;
 }
 
