@@ -27,7 +27,7 @@ export function renderUniverse(container) {
     if (charIndex < message.length) {
       typewriterText.textContent += message.charAt(charIndex);
       charIndex++;
-      setTimeout(typeWriter, 80);
+      setTimeout(typeWriter, 50);
     }
   }
 
@@ -152,8 +152,12 @@ export function renderUniverse(container) {
       cookie.style.top = `${y}px`;
       cookie.style.width = `${cookieSize}px`;
       cookie.style.height = `${cookieSize}px`;
+      
+      // 🎨 Fade-in escalonado dinámico
+      cookie.style.opacity = '0';
+      cookie.style.animation = `cookieFadeIn 0.6s ease-out ${index * 0.15}s forwards`;
 
-      const floatDistance = cookieSize * 0.15;
+      const floatDistance = cookieSize * 0.08;
       cookie.animate(
         [
           { transform: 'translateY(0)' },
@@ -161,7 +165,7 @@ export function renderUniverse(container) {
           { transform: 'translateY(0)' }
         ],
         {
-          duration: 3000 + Math.random() * 2000,
+          duration: 4000 + Math.random() * 2000,
           iterations: Infinity,
           easing: 'ease-in-out',
           delay: Math.random() * 1000
