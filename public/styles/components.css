@@ -1,7 +1,7 @@
 /* LOCKSCREEN */
 .lock-content {
+  top: 5vh;
   position: fixed;
-  bottom: 0vh;       /* controla qué tan abajo está */
   left: 50%;
   transform: translateX(-50%);
   
@@ -14,7 +14,7 @@
   background: transparent;
   border: none;
   border-bottom: 1px solid rgba(255, 255, 255, 0.4);
-  color: #fff !important;
+  color: #ffffff !important;
   font-size: 1.1rem;
   text-align: center;
   width: 8rem;
@@ -31,7 +31,7 @@
   padding: 0;
   margin: 0;
 
-  color: white;
+  color: rgb(255, 255, 255);
   font-size: 1rem;
   cursor: pointer;
 
@@ -51,13 +51,12 @@
 .lock-feedback {
   transition: all 0.6s ease;
   text-align: center;
-  opacity: 0.6;
+  
 }
 
 .lock-hint {
   margin-bottom: 0.3rem; /* ajusta aquí */
   font-size: 0.95rem;
-  opacity: 0.9;
   text-align: center;
   max-width: 18rem;
 }
