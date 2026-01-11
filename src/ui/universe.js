@@ -36,14 +36,20 @@ export function renderUniverse(container) {
   const cookiesData = [
     { content: "/public/assets/video/meme1.mp4", type: 'video', hint: 'Es hora de un meme' },
     { content: "/public/assets/video/hora-aventura.mp4", type: 'video', hint: 'Hay valor en todo lo verdadero ...' },
-    { content: "/public/assets/video/alma-pedazos.mp4", type: 'video', hint: 'Tengo el alma en pedazos' },
+    { content: "/public/assets/video/alma-pedazos.mp4", type: 'video', hint: '___Hoy tengo el alma en pedazos' },
     { content: "/public/assets/video/gatito-serio.mp4", type: 'video', hint: 'Te presento a un gatito serio' },
     { content: "/public/assets/video/ganar-perdiendo.mp4", type: 'video', hint: 'Gracias por existir; coincidir tuvo sentido.' },
-    { content: "/public/assets/video/shakira-sol.mp4", type: 'video', hint: '...cosas lindas ... vos y shaki' },
+    { content: "/public/assets/video/shakira-sol.mp4", type: 'video', hint: 'Cosas lindas ... Vos y shaki' },
     { content: "/public/assets/video/irrepetible.mp4", type: 'video', hint: '...Tu forma no se repite.' },
     { content: "/public/assets/video/recuerda.mp4", type: 'video', hint: 'No corras. Respira' },
-    { content: "/public/assets/video/lohicistebien.mp4", type: 'video', hint: 'Hay días en que recordar basta.' },
+    { content: "/public/assets/video/lohicistebien.mp4", type: 'video', hint: 'Buen dia ...' },
     { content: "/public/assets/video/corazon.mp4", type: 'video', hint: 'Tu corazón fuerte y el mio queriendose salir' },
+    { content: "No importa lo ocupada que estés, no olvides descansar,comer bien y cuidar de ti 💫", type: 'text', hint: '' }, // 👈 TEXTO
+    { content: "/public/assets/textos/nota-esperar.html", type: 'text-file', hint: '' },
+    { content: "El equilibrio no siempre es simetría. A veces es solo una tolerancia precisa al desorden", type: 'text', hint: '' }, 
+    { content: "...No todo dolor pide arreglo.", type: 'text', hint: '' },
+
+    
     
 
    
