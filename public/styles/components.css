@@ -120,7 +120,7 @@
 }
 /* TEXTO MÁQUINA DE ESCRIBIR */
 .typewriter-container {
-  position: absolute;
+  position: fixed;
   top: 2rem;
   left: 50%;
   transform: translateX(-50%);
@@ -165,12 +165,14 @@
 
 .cookies-container {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
   width: 100%;
-  height: 100%;
-  overflow: hidden;
-  
+  height: auto; /* 👈 Cambio: era 100% */
+  min-height: 100vh;
+  overflow: visible; /* 👈 Cambio: era hidden */
 }
+
 .cookie-active {
   transform: scale(1.5);
   z-index: 500;

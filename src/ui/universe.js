@@ -6,6 +6,7 @@ export function renderUniverse(container) {
   wrapper.className = 'universe';
 
   wrapper.innerHTML = `
+    <div class="universe-bg"></div>
     <div class="stars"></div>
     <div class="typewriter-container">
       <p class="typewriter-text"></p>
@@ -26,12 +27,11 @@ export function renderUniverse(container) {
     if (charIndex < message.length) {
       typewriterText.textContent += message.charAt(charIndex);
       charIndex++;
-      setTimeout(typeWriter, 80); // velocidad de escritura (50ms por letra)
+      setTimeout(typeWriter, 80);
     }
   }
 
-  // Iniciar efecto
-  setTimeout(typeWriter, 500); // espera 500ms antes de empezar
+  setTimeout(typeWriter, 500);
 
   const cookiesData = [
     { content: "/public/assets/video/meme1.mp4", type: 'video', hint: 'Es hora de un meme' },
@@ -44,45 +44,50 @@ export function renderUniverse(container) {
     { content: "/public/assets/video/recuerda.mp4", type: 'video', hint: 'No corras. Respira' },
     { content: "/public/assets/video/lohicistebien.mp4", type: 'video', hint: 'Buen dia ...' },
     { content: "/public/assets/video/corazon.mp4", type: 'video', hint: 'Tu corazón fuerte y el mio queriendose salir' },
-    { content: "No importa lo ocupada que estés, no olvides descansar,comer bien y cuidar de ti 💫", type: 'text', hint: '' }, // 👈 TEXTO
+    { content: "No importa lo ocupada que estés, no olvides descansar,comer bien y cuidar de ti 💫", type: 'text', hint: '' },
     { content: "/public/assets/textos/nota-esperar.html", type: 'text-file', hint: '' },
     { content: "El equilibrio no siempre es simetría. A veces es solo una tolerancia precisa al desorden", type: 'text', hint: '' }, 
     { content: "...No todo dolor pide arreglo.", type: 'text', hint: '' },
-
-    
-    
-
-   
   ];
 
   // 📱 Función para posicionar galletas desde el CENTRO sin colisiones
   function positionCookies() {
-    const { width, height } = cookiesContainer.getBoundingClientRect();
+    const { width } = cookiesContainer.getBoundingClientRect();
+    const viewportHeight = window.innerHeight;
     
     // Tamaño adaptativo según pantalla
     let cookieSize = 90;
-    if (width < 480) cookieSize = 55;       // móvil pequeño
-    else if (width < 768) cookieSize = 65;  // móvil/tablet
+    if (width < 480) cookieSize = 55;
+    else if (width < 768) cookieSize = 65;
     
     const padding = 15;
-    const topPadding = 120; // espacio extra arriba para el texto
-    const minDistance = cookieSize + 15; // distancia mínima entre galletas
+    const topPadding = 150; // 👈 Más espacio para evitar el texto (era 120)
+    const bottomPadding = 50;
+    const minDistance = cookieSize * 1.3;
     
-    // Centro de la pantalla (ajustado hacia abajo por el texto)
+    // 📊 Área disponible REAL para las galletas
+    const usableHeight = viewportHeight - topPadding - bottomPadding;
+    const usableWidth = width - padding * 2;
+    const availableArea = usableWidth * usableHeight;
+    const cookieArea = cookieSize * cookieSize * 2.5;
+    const theoreticalCapacity = Math.floor(availableArea / cookieArea);
+    
+    const canFitAll = cookiesData.length <= theoreticalCapacity;
+    
     const centerX = width / 2;
-    const centerY = (height + topPadding) / 2;
+    const centerY = topPadding + (usableHeight / 2); // 👈 Centro ajustado
+    const positions = [];
     
-    const positions = []; // guardar posiciones ya usadas
-    
-    // Función para verificar si una posición colisiona
-    function hasCollision(newX, newY) {
+    function hasCollision(centerX, centerY) {
       return positions.some(pos => {
-        const dx = newX - pos.x;
-        const dy = newY - pos.y;
+        const dx = centerX - pos.centerX;
+        const dy = centerY - pos.centerY;
         const distance = Math.sqrt(dx * dx + dy * dy);
         return distance < minDistance;
       });
     }
+    
+    let maxY = topPadding;
     
     cookiesData.forEach((data, index) => {
       const cookie = createFloatingCookie(
@@ -92,33 +97,62 @@ export function renderUniverse(container) {
         data.hint
       );
 
-      let x, y;
+      let x, y, cookieCenterX, cookieCenterY;
       let attempts = 0;
-      const maxAttempts = 50;
+      const maxAttempts = canFitAll ? 250 : 120;
       
-      // Intentar encontrar posición sin colisión
+      // 🎯 Límite máximo Y (no puede pasar de aquí si caben todas)
+      let maxAllowedY = canFitAll 
+        ? viewportHeight - bottomPadding - cookieSize 
+        : viewportHeight * 2; // Si no caben, puede expandirse
+      
       do {
-        const randomX = (Math.random() - 0.5) * width * 0.6;
-        const randomY = (Math.random() - 0.5) * height * 0.6;
+        // Variación más controlada alrededor del centro
+        const randomX = (Math.random() - 0.5) * usableWidth * 0.8;
+        const randomY = (Math.random() - 0.5) * usableHeight * 0.8;
         
         const baseX = centerX + randomX - cookieSize / 2;
         const baseY = centerY + randomY - cookieSize / 2;
         
         x = Math.max(padding, Math.min(width - cookieSize - padding, baseX));
-        y = Math.max(topPadding, Math.min(height - cookieSize - padding, baseY)); // respeta topPadding
+        y = Math.max(topPadding, Math.min(maxAllowedY, baseY)); // 👈 Respeta límite
+        
+        cookieCenterX = x + cookieSize / 2;
+        cookieCenterY = y + cookieSize / 2;
         
         attempts++;
-      } while (hasCollision(x, y) && attempts < maxAttempts);
+        
+        // Solo expandir si realmente NO caben
+        if (!canFitAll && attempts === 80) {
+          maxAllowedY = viewportHeight * 1.5;
+        }
+        if (!canFitAll && attempts === 160) {
+          maxAllowedY = viewportHeight * 3;
+        }
+        
+      } while (hasCollision(cookieCenterX, cookieCenterY) && attempts < maxAttempts);
       
-      // Guardar posición
-      positions.push({ x, y });
+      // Fallback: apilar verticalmente solo si agotó intentos
+      if (attempts >= maxAttempts) {
+        y = maxY + minDistance;
+        x = centerX - cookieSize / 2 + (Math.random() - 0.5) * (usableWidth * 0.3);
+        x = Math.max(padding, Math.min(width - cookieSize - padding, x));
+        cookieCenterX = x + cookieSize / 2;
+        cookieCenterY = y + cookieSize / 2;
+      }
+      
+      positions.push({ 
+        centerX: cookieCenterX, 
+        centerY: cookieCenterY 
+      });
+      
+      maxY = Math.max(maxY, y + cookieSize);
 
       cookie.style.left = `${x}px`;
       cookie.style.top = `${y}px`;
       cookie.style.width = `${cookieSize}px`;
       cookie.style.height = `${cookieSize}px`;
 
-      // Flotación sutil
       const floatDistance = cookieSize * 0.15;
       cookie.animate(
         [
@@ -134,19 +168,23 @@ export function renderUniverse(container) {
         }
       );
     });
+    
+    // 📏 Altura final: solo scroll si realmente excede
+    if (maxY + bottomPadding > viewportHeight) {
+      cookiesContainer.style.height = `${maxY + bottomPadding}px`;
+    } else {
+      cookiesContainer.style.height = '100vh';
+    }
   }
 
-  // Esperar al layout y posicionar
   requestAnimationFrame(() => {
     positionCookies();
   });
 
-  // 🔄 Re-posicionar en resize (con debounce)
   let resizeTimeout;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(() => {
-      // Limpiar galletas anteriores
       cookiesContainer.innerHTML = '';
       positionCookies();
     }, 250);
