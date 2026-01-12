@@ -237,6 +237,7 @@ function revealCookieContentInOverlay(overlay, type, content, cookie) {
       overlay.remove();
       cookie.classList.remove('cookie-active');
       cookie.classList.add('cookie-opened');
+      cookie._overlay =null;
     }, 400);
   });
 }

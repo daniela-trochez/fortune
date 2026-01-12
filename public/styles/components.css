@@ -164,8 +164,9 @@
   position: absolute;
   cursor: pointer;
   pointer-events: auto;
-  transition: transform 0.3s ease, opacity 0.3s ease;
+  transition: transform 1.3s ease, opacity 0.3s ease;
   touch-action: manipulation;
+
   
 }
 
@@ -185,7 +186,9 @@
 }
 
 .cookie-opened {
-  opacity: 0.4; /* galleta apagada pero interactuable */
+  opacity: 0.2 !important; /* 👈 El !important es clave */
+  filter: grayscale(0.5);
+  pointer-events: auto; /* 👈 Asegura que siga siendo clickeable */
 }
 
 /* OVERLAY */

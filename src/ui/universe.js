@@ -48,6 +48,7 @@ export function renderUniverse(container) {
     { content: "/public/assets/textos/nota-esperar.html", type: 'text-file', hint: '' },
     { content: "El equilibrio no siempre es simetría. A veces es solo una tolerancia precisa al desorden", type: 'text', hint: '' }, 
     { content: "...No todo dolor pide arreglo.", type: 'text', hint: '' },
+    { content: "/public/assets/video/mychemical.mp4", type: 'video', hint: 'Cabe una tumba para ti, que en cualquier contexto romantizarías' },
   ];
 
   // 📱 Función para posicionar galletas desde el CENTRO sin colisiones
