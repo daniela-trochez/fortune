@@ -30,15 +30,47 @@ function openCookieOverlay(cookie) {
     else if (cookie.dataset.type === 'text-file') {
       cookie._overlay = showTextFromFile(cookie.dataset.content, cookie);
     }
-    // 🎬 VIDEO → Mostrar hint primero
-    else {
-      cookie._overlay = showOverlayTitleWithTip(cookie.dataset.hint, cookie);
+    else if (cookie.dataset.type === 'image') {
+      cookie._overlay = showImageDirectly(cookie.dataset.content, cookie);
     }
+    // 🎬 VIDEO → Mostrar hint primero
+    else if (cookie.dataset.type === 'video') {
+    cookie._overlay = showOverlayTitleWithTip(cookie.dataset.hint, cookie);
+    } 
     
     cookie.classList.add('cookie-active');
     cookie.dataset.state = 'opened';
   }
 }
+
+function showImageDirectly(src, cookie) {
+  const overlay = document.createElement('div');
+  overlay.className = 'cookie-overlay';
+
+  overlay.innerHTML = `
+    <div class="cookie-box">
+      <div class="image-wrapper">
+        <img src="${src}" alt="Fortuna revelada" />
+      </div>
+      <button class="close-cookie">Cerrar</button>
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+
+  overlay.querySelector('.close-cookie').addEventListener('click', () => {
+    overlay.classList.add('fade-out-overlay');
+    setTimeout(() => {
+      overlay.remove();
+      cookie.classList.remove('cookie-active');
+      cookie.classList.add('cookie-opened');
+      cookie._overlay = null;
+    }, 400);
+  });
+
+  return overlay;
+}
+
 
 // 📖 Función para cargar y mostrar texto desde archivo
 async function showTextFromFile(filePath, cookie) {

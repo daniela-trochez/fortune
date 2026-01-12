@@ -2,7 +2,7 @@
 
 export const CONFIG = {
   PASSWORDS: ['300','trescientos'],
-  FAIL_TEXT: '... ♥ acordate, bonita.',
+  FAIL_TEXT: 'No... ♥ acordate, bonita.',
   SUCCESS_TEXT: 'gracias por recordar...',
 
   TRANSITION_DELAY: 1500, // ms
