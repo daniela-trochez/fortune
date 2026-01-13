@@ -1,3 +1,4 @@
+
 import { CONFIG } from "../core/config.js";
 import { setState, STATES } from "../core/state.js";
 
@@ -22,51 +23,64 @@ export function renderLockScreen(container) {
     <div class="lock-content">
       <p class="lock-hint">¿Cuántos besos en Año Nuevo?</p>
 
-      <!-- CONTENEDOR DEL INPUT + OJO -->
-    <div class="password-field">
-      <input
-        type="password"
-        inputmode="text"
-        class="lock-input"
-        aria-label="código"
-        autocomplete="off"
-      />
+      <div class="password-field">
+        <input
+          type="password"
+          inputmode="text"
+          class="lock-input"
+          aria-label="código"
+          autocomplete="off"
+          placeholder="*****"
+        />
 
-      <button
-        type="button"
-        class="password-toggle"
-        aria-label="Mostrar contraseña"
-      >
-        👁
-      </button>
+        <button
+          type="button"
+          class="password-toggle"
+          aria-label="Mostrar contraseña"
+          tabindex="-1"
+        >
+          👁
+        </button>
+      </div>
+
+      <button class="lock-button">Entrar</button>
+      <p class="lock-feedback"></p>
     </div>
-
-    <button class="lock-button">Entrar</button>
-    <p class="lock-feedback"></p>
-  </div>
-`;
+  `;
 
   const video = wrapper.querySelector(".bg-video");
   const soundBtn = wrapper.querySelector(".sound-toggle");
   const input = wrapper.querySelector(".lock-input");
   const feedback = wrapper.querySelector(".lock-feedback");
   const button = wrapper.querySelector(".lock-button");
-
   const passwordField = wrapper.querySelector(".password-field");
   const toggle = wrapper.querySelector(".password-toggle");
 
-/* ---- TOGGLE PASSWORD VISIBILITY ---- */
-toggle.addEventListener("click", () => {
-  const isHidden = input.type === "password";
+  /* =====================================================
+     🔒 CONGELAR FONDO AL ENTRAR EN MODO INPUT
+     (NO se descongela por blur)
+  ====================================================== */
+  input.addEventListener("focus", () => {
+    document.body.classList.add("freeze-bg");
+  });
 
-  input.type = isHidden ? "text" : "password";
+  /* =====================================================
+     👁 EVITAR QUE EL OJO ROBE EL FOCO (CLAVE EN ANDROID)
+  ====================================================== */
+  toggle.addEventListener("pointerdown", (e) => {
+    e.preventDefault();
+  });
 
-  // accesibilidad + estado visual
-  toggle.setAttribute(
-    "aria-label",
-    isHidden ? "Ocultar contraseña" : "Mostrar contraseña"
-  );
-});
+  /* ---- TOGGLE PASSWORD VISIBILITY ---- */
+  toggle.addEventListener("click", () => {
+    const isHidden = input.type === "password";
+    input.type = isHidden ? "text" : "password";
+
+    toggle.setAttribute(
+      "aria-label",
+      isHidden ? "Ocultar contraseña" : "Mostrar contraseña"
+    );
+  });
 
   /* ---- AUDIO CONTROL ---- */
   soundBtn.addEventListener("click", () => {
@@ -81,53 +95,46 @@ toggle.addEventListener("click", () => {
     soundBtn.classList.add("hidden");
   });
 
- /* ---- PASSWORD FLOW ---- */
-input.focus();
+  /* ---- PASSWORD FLOW ---- */
+  input.focus();
 
-input.addEventListener("input", () => {
-  feedback.textContent = "";
-
-  const passwordField = input.closest(".password-field");
-  const hasValue = input.value.length > 0;
-
-  if (passwordField) {
+  input.addEventListener("input", () => {
+    feedback.textContent = "";
+    const hasValue = input.value.length > 0;
     passwordField.classList.toggle("has-value", hasValue);
-  }
 
-  // 🔐 Si se borra el texto, forzar modo password
-  if (!hasValue && input.type === "text") {
-    input.type = "password";
-  }
-});
+    if (!hasValue && input.type === "text") {
+      input.type = "password";
+    }
+  });
 
+  button.addEventListener("click", () => {
+    if (!input.value) return;
 
-button.addEventListener("click", () => {
-  if (!input.value) return;
+    const normalizedInput = input.value.trim().toLowerCase();
+    const isValid = CONFIG.PASSWORDS.includes(normalizedInput);
 
-  const normalizedInput = input.value
-    .trim()
-    .toLowerCase();
+    if (isValid) {
+      input.disabled = true;
+      button.disabled = true;
 
-  const isValid = CONFIG.PASSWORDS.includes(normalizedInput);
+      wrapper.classList.add("unlocking");
+      feedback.textContent = CONFIG.SUCCESS_TEXT;
 
-  if (isValid) {
-    input.disabled = true;
-    button.disabled = true;
+      /* 🧼 limpiar bloqueo al salir del lockscreen */
+      document.body.classList.remove("freeze-bg");
 
-    wrapper.classList.add("unlocking");
-    feedback.textContent = CONFIG.SUCCESS_TEXT;
+      setTimeout(() => {
+        setState(STATES.UNIVERSE);
+      }, CONFIG.TRANSITION_DELAY);
+    } else {
+      feedback.textContent = CONFIG.FAIL_TEXT;
+    }
+  });
 
-    setTimeout(() => {
-      setState(STATES.UNIVERSE);
-    }, CONFIG.TRANSITION_DELAY);
-  } else {
-    feedback.textContent = CONFIG.FAIL_TEXT;
-  }
-});
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") button.click();
+  });
 
-input.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") button.click();
-});
-
-container.appendChild(wrapper);
+  container.appendChild(wrapper);
 }
