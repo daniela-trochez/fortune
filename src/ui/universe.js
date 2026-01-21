@@ -20,7 +20,7 @@ export function renderUniverse(container) {
   const typewriterText = wrapper.querySelector('.typewriter-text');
 
   // ⌨️ Efecto máquina de escribir
-  const message = "Bienvenida a este espacio, ahora quiero que descubras qué trae cada fortuna, espero que te guste";
+  const message = "Bienvenida a este espacio, quiero que descubras qué trae cada fortuna; espero que te guste.";
   let charIndex = 0;
 
   function typeWriter() {
@@ -34,25 +34,32 @@ export function renderUniverse(container) {
   setTimeout(typeWriter, 500);
 
   const cookiesData = [
-    { content: "/public/assets/video/meme1.mp4", type: 'video', hint: 'Es hora de un meme' },
-    { content: "/public/assets/video/hora-aventura.mp4", type: 'video', hint: 'Hay valor en todo lo verdadero ...' },
-    { content: "/public/assets/video/alma-pedazos.mp4", type: 'video', hint: '___Hoy tengo el alma en pedazos' },
+    { content: "/public/assets/video/hora-aventura.mp4", type: 'video', hint: 'Me gustan las historias que te enseñan con significado y luego te devuelven entera.' },
+    { content: "/public/assets/video/alma-pedazos.mp4", type: 'video', hint: '___Tengo el alma en pedazos' },
     { content: "/public/assets/video/gatito-serio.mp4", type: 'video', hint: 'Te presento a un gatito serio' },
-    { content: "/public/assets/video/ganar-perdiendo.mp4", type: 'video', hint: 'Gracias por existir; coincidir tuvo sentido.' },
-    { content: "/public/assets/video/shakira-sol.mp4", type: 'video', hint: 'Cosas lindas ... Vos y shaki' },
-    { content: "/public/assets/video/irrepetible.mp4", type: 'video', hint: '...Tu forma no se repite.' },
+    { content: "/public/assets/video/ganar-perdiendo.mp4", type: 'video', hint: 'Coincidir tuvo sentido.' },
+    { content: "/public/assets/video/irrepetibe2.mp4", type: 'video', hint: '...Tu forma no se repite.' },
     { content: "/public/assets/video/recuerda.mp4", type: 'video', hint: 'No corras. Respira' },
     { content: "/public/assets/video/lohicistebien.mp4", type: 'video', hint: 'Buen dia ...' },
     { content: "/public/assets/video/corazon.mp4", type: 'video', hint: 'Tu corazón fuerte y el mio queriendose salir' },
-    { content: "No importa lo ocupada que estés, no olvides descansar,comer bien y cuidar de ti 💫", type: 'text', hint: '' },
+    { content: "No importa lo ocupada que estés, no olvides descansar, comer bien y cuidar de ti 💫", type: 'text', hint: '' },
     { content: "/public/assets/textos/nota-esperar.html", type: 'text-file', hint: '' },
     { content: "El equilibrio no siempre es simetría. A veces es solo una tolerancia precisa al desorden", type: 'text', hint: '' },
     { content: "...No todo dolor pide arreglo.", type: 'text', hint: '' },
     { content: "/public/assets/video/mychemical.mp4", type: 'video', hint: 'Cabe una tumba para ti, que en cualquier contexto romantizarías' },
-    {
-      content: "/public/assets/images/jeinyophelia-copy.jpg",
-      type: "image"
-    }
+    { content: "/public/assets/images/02354896.jpg", type: "image"},
+    { content: "/public/assets/video/castigo.mp4", type: 'video', hint: 'Si te ries, dios te castiga' },
+    { content: "/public/assets/video/time.mp4", type: 'video', hint: 'Mi pareja favorita del cine vive aquí. tambien la hermana del protagonista me rompió el corazón.Y, aun así, esta película sabe reparar'},
+    { content: "/public/assets/video/youreyes.mp4", type: 'video', hint: 'Mi color'},
+    { content: "/public/assets/video/human.mp4", type: 'video', hint: 'Cada situación guardan algo por descubrir. Deseo que tus ojos conserven siempre la magia de sorprenderse.'},
+    { content: "/public/assets/video/motores.mp4", type: 'video', hint: 'Hoy vamos con toda la energía, como ese video que me salió 💪✨'},
+    { content: "/public/assets/textos/nota-j.html", type: 'text-file', hint: '' },
+
+
+
+
+
+
   ];
 
   // 📱 Función para posicionar galletas desde el CENTRO sin colisiones
