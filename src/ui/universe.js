@@ -34,7 +34,7 @@ export function renderUniverse(container) {
   setTimeout(typeWriter, 500);
 
   const cookiesData = [
-    { content: "/public/assets/video/hora-aventura.mp4", type: 'video', hint: 'Me gustan las historias que te enseñan con significado y luego te devuelven entera.' },
+    { content: "/public/assets/video/hora_de_aventura.mp4", type: 'video', hint: 'Me gustan las historias que te enseñan con significado y luego te devuelven entera.' },
     { content: "/public/assets/video/alma-pedazos.mp4", type: 'video', hint: '___Tengo el alma en pedazos' },
     { content: "/public/assets/video/gatito-serio.mp4", type: 'video', hint: 'Te presento a un gatito serio' },
     { content: "/public/assets/video/ganar-perdiendo.mp4", type: 'video', hint: 'Coincidir tuvo sentido.' },
@@ -49,16 +49,11 @@ export function renderUniverse(container) {
     { content: "/public/assets/video/mychemical.mp4", type: 'video', hint: 'Cabe una tumba para ti, que en cualquier contexto romantizarías' },
     { content: "/public/assets/images/02354896.jpg", type: "image"},
     { content: "/public/assets/video/castigo.mp4", type: 'video', hint: 'Si te ries, dios te castiga' },
-    { content: "/public/assets/video/time.mp4", type: 'video', hint: 'Mi pareja favorita del cine vive aquí. tambien la hermana del protagonista me rompió el corazón.Y, aun así, esta película sabe reparar'},
+    { content: "/public/assets/video/about_time.mp4", type: 'video', hint: 'Aquí vive mi pareja favorita del cine. Por otro lado La historia de la hermana del protagonista me rompió el corazón. Pero esta película, aun así, sabe repararlo.'},
     { content: "/public/assets/video/youreyes.mp4", type: 'video', hint: 'Mi color'},
-    { content: "/public/assets/video/human.mp4", type: 'video', hint: 'Cada situación guardan algo por descubrir. Deseo que tus ojos conserven siempre la magia de sorprenderse.'},
+    { content: "/public/assets/video/te_busco.mp4", type: 'video', hint: 'Deseo que tus ojos conserven siempre la magia de sorprenderse.'},
     { content: "/public/assets/video/motores.mp4", type: 'video', hint: 'Hoy vamos con toda la energía, como ese video que me salió 💪✨'},
     { content: "/public/assets/textos/nota-j.html", type: 'text-file', hint: '' },
-
-
-
-
-
 
   ];
 
