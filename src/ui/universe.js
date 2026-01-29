@@ -54,7 +54,6 @@ export function renderUniverse(container) {
     { content: "/public/assets/video/te_busco.mp4", type: 'video', hint: 'Deseo que tus ojos conserven siempre la magia de sorprenderse.'},
     { content: "/public/assets/video/motores.mp4", type: 'video', hint: 'Hoy vamos con toda la energía, como ese video que me salió 💪✨'},
     { content: "/public/assets/textos/nota-j.html", type: 'text-file', hint: '' },
-
   ];
 
   // 📱 Función para posicionar galletas desde el CENTRO sin colisiones
@@ -68,9 +67,9 @@ export function renderUniverse(container) {
     else if (width < 768) cookieSize = 65;
 
     const padding = 15;
-    const topPadding = 150; // 👈 Más espacio para evitar el texto (era 120)
+    const topPadding = 150;
     const bottomPadding = 50;
-    const minDistance = cookieSize * 1.3;
+    const minDistance = cookieSize * 1.25; // 👈 Reducido de 1.3 para más compacidad
 
     // 📊 Área disponible REAL para las galletas
     const usableHeight = viewportHeight - topPadding - bottomPadding;
@@ -82,7 +81,7 @@ export function renderUniverse(container) {
     const canFitAll = cookiesData.length <= theoreticalCapacity;
 
     const centerX = width / 2;
-    const centerY = topPadding + (usableHeight / 2); // 👈 Centro ajustado
+    const centerY = topPadding + (usableHeight / 2);
     const positions = [];
 
     function hasCollision(centerX, centerY) {
@@ -106,44 +105,52 @@ export function renderUniverse(container) {
 
       let x, y, cookieCenterX, cookieCenterY;
       let attempts = 0;
-      const maxAttempts = canFitAll ? 250 : 120;
+      const maxAttempts = 300; // 👈 Más intentos para encontrar posición
 
-      // 🎯 Límite máximo Y (no puede pasar de aquí si caben todas)
+      // 🎯 Límite máximo Y - CONTROLADO
       let maxAllowedY = canFitAll
         ? viewportHeight - bottomPadding - cookieSize
-        : viewportHeight * 2; // Si no caben, puede expandirse
+        : viewportHeight * 1.3; // 👈 Máximo 1.3x viewport (antes era 2x y 3x)
 
       do {
         // Variación más controlada alrededor del centro
-        const randomX = (Math.random() - 0.5) * usableWidth * 0.8;
-        const randomY = (Math.random() - 0.5) * usableHeight * 0.8;
+        const randomX = (Math.random() - 0.5) * usableWidth * 0.85; // 👈 Un poco más de ancho
+        const randomY = (Math.random() - 0.5) * usableHeight * 0.85;
 
         const baseX = centerX + randomX - cookieSize / 2;
         const baseY = centerY + randomY - cookieSize / 2;
 
         x = Math.max(padding, Math.min(width - cookieSize - padding, baseX));
-        y = Math.max(topPadding, Math.min(maxAllowedY, baseY)); // 👈 Respeta límite
+        y = Math.max(topPadding, Math.min(maxAllowedY, baseY));
 
         cookieCenterX = x + cookieSize / 2;
         cookieCenterY = y + cookieSize / 2;
 
         attempts++;
 
-        // Solo expandir si realmente NO caben
-        if (!canFitAll && attempts === 80) {
-          maxAllowedY = viewportHeight * 1.5;
+        // 🔧 Expansión GRADUAL y CONTROLADA solo si es necesario
+        if (!canFitAll && attempts === 100) {
+          maxAllowedY = viewportHeight * 1.15; // Solo 15% más
         }
-        if (!canFitAll && attempts === 160) {
-          maxAllowedY = viewportHeight * 3;
+        if (!canFitAll && attempts === 200) {
+          maxAllowedY = viewportHeight * 1.3; // Máximo 30% más
         }
 
       } while (hasCollision(cookieCenterX, cookieCenterY) && attempts < maxAttempts);
 
-      // Fallback: apilar verticalmente solo si agotó intentos
+      // Fallback compacto: apilar cerca del último en vez de muy abajo
       if (attempts >= maxAttempts) {
-        y = maxY + minDistance;
-        x = centerX - cookieSize / 2 + (Math.random() - 0.5) * (usableWidth * 0.3);
+        const lastPos = positions[positions.length - 1];
+        if (lastPos) {
+          // Intenta colocar cerca de la última galleta exitosa
+          y = lastPos.centerY - cookieSize / 2 + minDistance;
+          x = lastPos.centerX - cookieSize / 2 + (Math.random() - 0.5) * (cookieSize * 2);
+        } else {
+          y = maxY + minDistance;
+          x = centerX - cookieSize / 2 + (Math.random() - 0.5) * (usableWidth * 0.3);
+        }
         x = Math.max(padding, Math.min(width - cookieSize - padding, x));
+        y = Math.max(topPadding, Math.min(maxAllowedY, y));
         cookieCenterX = x + cookieSize / 2;
         cookieCenterY = y + cookieSize / 2;
       }
@@ -162,7 +169,7 @@ export function renderUniverse(container) {
 
       // 🎨 Fade-in escalonado dinámico
       cookie.style.opacity = '0';
-      cookie.style.animation = `cookieFadeIn 0.6s ease-out ${index * 0.15}s forwards`;
+      cookie.style.animation = `cookieFadeIn 0.6s ease-out ${index * 0.12}s forwards`;
 
       const floatDistance = cookieSize * 0.08;
       cookie.animate(
